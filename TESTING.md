@@ -18,7 +18,7 @@ Entorno utilizado: Windows, Flutter 3.47.2 y Dart 3.13.2.
   paquete para silenciar un aviso del consumidor.
 
 El porcentaje mide líneas ejecutadas, no exhaustividad de comportamientos ni
-la inexistencia de bugs. Los tests no son 45 recorridos de una API: el paquete
+la inexistencia de bugs. Las pruebas no son recorridos de una API: el paquete
 no necesita servidor. También se prueba UiStatCard (vertical/compacta) y
 UiSplitView con navegación/acciones a 360/1200.
 

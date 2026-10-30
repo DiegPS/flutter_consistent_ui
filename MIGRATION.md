@@ -8,10 +8,10 @@ compartida/CI, usa el repositorio público
 commit fijado. No integres un `C:/Users/...` en un
 pubspec que otro equipo vaya a resolver.
 
-No se publicaron ni modificaron automáticamente dependencias de OnAuto. Ese
-proyecto sigue con la implementación que tiene comprobada. La sustitución de
-sus adaptadores por esta biblioteca se debe hacer cuando su gestor de
-dependencias pueda resolver el paquete también en CI.
+La biblioteca no modifica automáticamente sus consumidores. Cada aplicación
+integra explícitamente el paquete y comprueba sus propios flujos. OnAuto ya
+utiliza adaptadores con nombres de producto para resolver las implementaciones
+de controles, formularios, listas, métricas y navegación desde este paquete.
 
 ## Secuencia recomendada
 
