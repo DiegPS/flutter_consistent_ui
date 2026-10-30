@@ -141,7 +141,7 @@ abstract final class UiControls {
     required List<DropdownMenuItem<T>>? items,
     required ValueChanged<T?>? onChanged,
     InputDecoration? decoration,
-    bool isExpanded = false,
+    bool isExpanded = true,
     TextStyle? style,
     FormFieldValidator<T>? validator,
   }) => Builder(
@@ -153,6 +153,7 @@ abstract final class UiControls {
       onChanged: onChanged,
       isExpanded: isExpanded,
       isDense: true,
+      itemHeight: null,
       style: _text(context, style),
       decoration: UiControlMetrics.decoration(
         context,

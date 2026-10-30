@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../theme/ui_theme.dart';
 
 /// Responsive, sustainable card grid that behaves like CSS Grid (auto-fit / stretch).
 ///
 /// If [itemHeight] is null, cards in the same row dynamically match the height of
-/// the tallest card in that row using [IntrinsicHeight], ensuring no blank gaps
+/// the tallest card in that row using a bounded two-pass layout, ensuring no blank gaps
 /// or overflow.
 class UiMetricGrid extends StatelessWidget {
   const UiMetricGrid({
@@ -71,31 +72,129 @@ class UiMetricGrid extends StatelessWidget {
         children: [
           for (var r = 0; r < rows.length; r++) ...[
             if (r > 0) SizedBox(height: spacing),
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (var c = 0; c < columns; c++) ...[
-                    if (c > 0) SizedBox(width: spacing),
-                    Expanded(
-                      child: c < rows[r].length
-                          ? (itemHeight != null
-                                ? ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      minHeight: itemHeight!,
-                                    ),
-                                    child: rows[r][c],
-                                  )
-                                : rows[r][c])
-                          : const SizedBox.shrink(),
-                    ),
-                  ],
-                ],
-              ),
+            _EqualHeightRow(
+              columns: columns,
+              spacing: spacing,
+              minimumHeight: itemHeight ?? 0,
+              children: rows[r],
             ),
           ],
         ],
       );
     },
   );
+}
+
+class _EqualHeightRow extends MultiChildRenderObjectWidget {
+  const _EqualHeightRow({
+    required this.columns,
+    required this.spacing,
+    required this.minimumHeight,
+    required super.children,
+  });
+  final int columns;
+  final double spacing, minimumHeight;
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderEqualHeightRow(
+        columns,
+        spacing,
+        minimumHeight,
+        Directionality.of(context),
+      );
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderEqualHeightRow renderObject,
+  ) => renderObject.configure(
+    columns,
+    spacing,
+    minimumHeight,
+    Directionality.of(context),
+  );
+}
+
+class _GridData extends ContainerBoxParentData<RenderBox> {}
+
+class _RenderEqualHeightRow extends RenderBox
+    with
+        ContainerRenderObjectMixin<RenderBox, _GridData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, _GridData> {
+  _RenderEqualHeightRow(
+    this.columns,
+    this.spacing,
+    this.minimumHeight,
+    this.direction,
+  );
+  int columns;
+  double spacing, minimumHeight;
+  TextDirection direction;
+
+  void configure(
+    int nextColumns,
+    double nextSpacing,
+    double nextMinimum,
+    TextDirection nextDirection,
+  ) {
+    if (columns == nextColumns &&
+        spacing == nextSpacing &&
+        minimumHeight == nextMinimum &&
+        direction == nextDirection) {
+      return;
+    }
+    columns = nextColumns;
+    spacing = nextSpacing;
+    minimumHeight = nextMinimum;
+    direction = nextDirection;
+    markNeedsLayout();
+  }
+
+  @override
+  void setupParentData(RenderBox child) {
+    if (child.parentData is! _GridData) child.parentData = _GridData();
+  }
+
+  @override
+  void performLayout() {
+    assert(constraints.hasBoundedWidth, 'UiMetricGrid requires bounded width.');
+    final width = constraints.maxWidth;
+    final itemWidth = ((width - spacing * (columns - 1)) / columns).clamp(
+      0.0,
+      double.infinity,
+    );
+    var height = minimumHeight;
+    var child = firstChild;
+    while (child != null) {
+      child.layout(
+        BoxConstraints.tightFor(width: itemWidth),
+        parentUsesSize: true,
+      );
+      if (child.size.height > height) height = child.size.height;
+      child = (child.parentData! as _GridData).nextSibling;
+    }
+    child = firstChild;
+    var index = 0;
+    while (child != null) {
+      child.layout(
+        BoxConstraints.tightFor(width: itemWidth, height: height),
+        parentUsesSize: true,
+      );
+      final data = child.parentData! as _GridData;
+      final x = index * (itemWidth + spacing);
+      data.offset = Offset(
+        direction == TextDirection.ltr ? x : width - itemWidth - x,
+        0,
+      );
+      index++;
+      child = data.nextSibling;
+    }
+    size = constraints.constrain(Size(width, height));
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) =>
+      defaultPaint(context, offset);
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
+      defaultHitTestChildren(result, position: position);
 }

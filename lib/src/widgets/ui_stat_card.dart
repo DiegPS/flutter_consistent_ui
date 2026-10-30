@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'ui_metric_card.dart';
+import '../theme/ui_theme.dart';
 
 /// A vertical dashboard statistic with a natural height and an optional action.
 /// Values are formatted by the consumer; this widget never invents a trend.
@@ -15,7 +16,29 @@ class UiStatCard extends StatelessWidget {
     this.onTap,
     this.compact = false,
     super.key,
-  });
+  }) : _adaptive = false,
+       _minimumExpandedWidth = 240;
+
+  /// Creates a statistic that chooses its composition from available space.
+  ///
+  /// Uses the horizontal composition in compact windows or when the local
+  /// width is below [minimumExpandedWidth] adjusted for text scaling.
+  /// Requires bounded horizontal constraints. Use [UiStatCard.new] to force
+  /// either composition explicitly without changing existing consumers.
+  const UiStatCard.adaptive({
+    required this.label,
+    required this.value,
+    required this.icon,
+    this.category,
+    this.description,
+    this.accent,
+    this.onTap,
+    double minimumExpandedWidth = 240,
+    super.key,
+  }) : assert(minimumExpandedWidth > 0),
+       compact = false,
+       _adaptive = true,
+       _minimumExpandedWidth = minimumExpandedWidth;
 
   final String label, value;
   final IconData icon;
@@ -23,11 +46,31 @@ class UiStatCard extends StatelessWidget {
   final Color? accent;
   final VoidCallback? onTap;
 
-  /// Uses the horizontal metric composition when vertical space is precious.
+  /// Whether the explicit constructor uses the horizontal composition.
   final bool compact;
+  final bool _adaptive;
+  final double _minimumExpandedWidth;
 
   @override
   Widget build(BuildContext context) {
+    if (_adaptive) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final config = UiThemeData.of(context);
+          final scale =
+              MediaQuery.textScalerOf(context).scale(config.fontSize) /
+              config.fontSize;
+          final horizontal =
+              MediaQuery.sizeOf(context).width < config.compactBreakpoint ||
+              constraints.maxWidth < _minimumExpandedWidth * scale;
+          return _content(context, horizontal);
+        },
+      );
+    }
+    return _content(context, compact);
+  }
+
+  Widget _content(BuildContext context, bool compact) {
     if (compact) {
       return UiMetricCard(
         label: label,

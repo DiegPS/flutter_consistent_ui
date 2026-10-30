@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0
+
+- Add UiStatCard.adaptive; keep the explicit constructor's behavior unchanged.
+- Make selects expanded by default, with natural menu item height; callers can
+  opt out via isExpanded:false. This avoids overflow with large text.
+- Replace intrinsic metric row sizing with bounded two-pass layout, supporting
+  LayoutBuilder children, matching row heights, RTL and hit testing.
+- Add machine-readable public API index and agent-oriented adoption rules,
+  checked against exports, geometry defaults and runtime dependencies.
+- Add three executable, tested composition recipes without a hosted catalog.
+- Expand regression coverage for 599/600 boundaries, 300% text, fractional DPR,
+  local panel adaptation and exact editor-state preservation while resizing.
+
 ## 0.2.1
 
 - Opt-in compact horizontal composition for UiStatCard on small viewports.

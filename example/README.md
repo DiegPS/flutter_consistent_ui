@@ -1,5 +1,9 @@
 # Ejemplo independiente
 
+Para consultar patrones concretos sin un catálogo web, usa `lib/recipes/main.dart`
+con `--dart-define=UI_RECIPE=collection`, `form` o `dashboard`. Los tres patrones
+son código compilable, con callbacks y pruebas; no requieren imágenes ni servidor.
+
 Este proyecto consume `flutter_consistent_ui` mediante `path: ../`, igual que
 lo haría cualquier otra aplicación. No necesita OnAuto, un servidor ni sesión.
 

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "package": "flutter_consistent_ui",
+  "entrypoint": "package:flutter_consistent_ui/flutter_consistent_ui.dart",
+  "signatures": "Read the indexed Dart declaration; this file does not duplicate signatures.",
+  "migration": "ai/MIGRATION.md",
+  "recipe_entrypoint": "example/lib/recipes/main.dart",
+  "recipe_define": "UI_RECIPE=collection|form|dashboard",
+  "runtime_dependencies": ["flutter"],
+  "geometry_defaults": {"controlHeight": 40, "compactControlHeight": 48, "compactBreakpoint": 600, "fontSize": 14, "lineHeight": 20, "formSpacing": 20},
+  "invariants": [
+    "Measure InputDecorator.containerOf and the button Material surface, not the full helper/error box.",
+    "Single-line height = window base + max(0, scaledFont/fontSize - 1) * lineHeight.",
+    "Helpers, errors, counters, multiline content and long action labels keep natural height.",
+    "Use bounded local width for grids/split views and bounded height for collection pages.",
+    "Never disable text scaling, shrink text with FittedBox or set finite outer field heights to pass tests.",
+    "Native callbacks, keys, focus and controller ownership are preserved; consumers own business behavior.",
+    "UiStatCard.adaptive chooses horizontal on compact windows or locally narrow/scaled panels; explicit constructor remains stable.",
+    "UiControls.select expands by default and menu itemHeight is natural; explicit isExpanded:false is a caller opt-out.",
+    "No logos, fonts, API, auth, persistence or business data are supplied by the runtime package."
+  ],
+  "recipes": {
+    "collection": "example/lib/recipes/collection_recipe.dart",
+    "fullscreen_form": "example/lib/recipes/form_recipe.dart",
+    "dashboard": "example/lib/recipes/dashboard_recipe.dart"
+  },
+  "sources": {
+    "src/theme/ui_theme.dart": ["UiThemeData", "UiTheme"],
+    "src/theme/ui_control_metrics.dart": ["UiControlMetrics", "UiControlScope"],
+    "src/theme/ui_semantic_colors.dart": ["UiTone", "UiSemanticColors"],
+    "src/theme/ui_typography.dart": ["UiTypography"],
+    "src/layout/ui_layout.dart": ["UiBreakpoints", "UiWindowClass", "UiPlatform", "UiLayout", "UiLayoutWidgetBuilder", "UiLayoutBuilder", "UiDialogViewport"],
+    "src/layout/ui_page.dart": ["UiPageInsets", "UiPage", "UiPageHeader", "UiPageToolbar"],
+    "src/layout/ui_split_view.dart": ["UiSplitView"],
+    "src/controls/ui_controls.dart": ["UiControls"],
+    "src/controls/ui_segmented_control.dart": ["UiSegment", "UiSegmentedControl"],
+    "src/forms/ui_form_layout.dart": ["UiFormSection", "UiFormGrid", "UiFormFields"],
+    "src/collections/ui_collection_list.dart": ["UiCollectionBadgeTone", "UiCollectionList", "UiCollectionBadge", "UiCollectionDetail", "UiCollectionItem"],
+    "src/collections/ui_collection_viewport.dart": ["UiPaginationFooter", "UiCollectionViewport"],
+    "src/collections/ui_collection_page.dart": ["UiSearchField", "UiCollectionToolbar", "UiCollectionPage", "UiPagination"],
+    "src/widgets/ui_empty_state.dart": ["UiEmptyState"],
+    "src/widgets/ui_metric_card.dart": ["UiMetricCard"],
+    "src/widgets/ui_metric_grid.dart": ["UiMetricGrid"],
+    "src/widgets/ui_sparkline.dart": ["UiSparkline"],
+    "src/widgets/ui_animated_counter.dart": ["UiCountUpText"],
+    "src/widgets/ui_stat_card.dart": ["UiStatCard"],
+    "src/dialogs/ui_fullscreen_dialog.dart": ["showUiFullscreenDialog", "UiFullscreenDialog"],
+    "src/notifications/ui_notice.dart": ["UiNotice", "UiNoticeController", "UiNoticeHost"],
+    "src/navigation/ui_bottom_navigation.dart": ["UiBottomNavigationItem", "UiBottomNavigation"]
+  },
+  "decision_rules": {
+    "form": "UiFormFields for vertical groups; UiFormGrid for bounded two-column fields; UiFormSection for titled groups.",
+    "list": "UiCollectionPage + UiSearchField + UiCollectionList.builder. Keep data fetching/filtering in consumer.",
+    "statistic": "UiStatCard.adaptive for auto; UiStatCard(compact: bool) for explicit; UiMetricCard for horizontal/trend use.",
+    "modal_notice": "showUiFullscreenDialog builder context for SnackBar; UiNoticeHost via MaterialApp.builder for above-route notices.",
+    "styling": "Consumer ColorScheme/font/UiSemanticColors; UiThemeData controls geometry; do not override dimensions per action."
+  },
+  "verification": ["dart analyze --fatal-infos", "flutter test --coverage", "cd example && flutter test"],
+  "limitations": ["Material-based, not native Fluent/Cupertino", "No business or API end-to-end coverage", "Physical device support must be checked by consumers", "UiCountUpText accepts decimal dot/comma grouping; preformat or avoid animation for other notations"]
+}

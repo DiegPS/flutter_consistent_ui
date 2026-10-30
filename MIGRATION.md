@@ -4,7 +4,7 @@
 
 Para probar en tu PC, usa una dependencia `path`. Para integrar en una rama
 compartida/CI, usa el repositorio público
-`https://github.com/DiegPS/flutter_consistent_ui.git` con el tag `v0.2.1` o un
+`https://github.com/DiegPS/flutter_consistent_ui.git` con el tag `v0.3.0` o un
 commit fijado. No integres un `C:/Users/...` en un
 pubspec que otro equipo vaya a resolver.
 

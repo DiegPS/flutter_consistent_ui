@@ -12,7 +12,7 @@ no incluye logos y no obliga a usar los colores de otro producto.
 ## Estado y ubicación
 
 - Paquete independiente: `C:/Users/dpahu/Documents/flutter_consistent_ui`.
-- API: `0.2.1`, distribuida por Git (`publish_to: none` evita publicar en pub.dev).
+- API: `0.3.0`, distribuida por Git (`publish_to: none` evita publicar en pub.dev).
 - Flutter mínimo **3.47.0**, Dart **3.13.0**. Se declara el SDK realmente probado;
   no se promete compatibilidad con versiones antiguas sin verificarlas.
 - Repositorio público: https://github.com/DiegPS/flutter_consistent_ui.
@@ -27,7 +27,7 @@ dependencies:
   flutter_consistent_ui:
     git:
       url: https://github.com/DiegPS/flutter_consistent_ui.git
-      ref: v0.2.1
+      ref: v0.3.0
 ```
 
 Ejecuta `flutter pub get`. El tag fija la versión para que una modificación de
@@ -52,6 +52,12 @@ los archivos de la biblioteca a cada proyecto**.
 Para equipos/CI usa la dependencia Git anterior, no una ruta de tu PC.
 
 ## Inicio mínimo
+
+Para agentes/IA: empieza por [ai/UI_CONTRACT.json](ai/UI_CONTRACT.json).
+Indexa todas las declaraciones públicas, restricciones y recetas; un test
+comprueba que no diverja de los exports y las métricas reales. Las firmas
+siguen siendo los archivos Dart indexados, no una segunda copia en JSON.
+La adopción y responsabilidades están en [ai/MIGRATION.md](ai/MIGRATION.md).
 
 ```dart
 import 'package:flutter/material.dart';
@@ -194,6 +200,18 @@ mostrar el valor estático o aportar una composición/animación del consumidor.
 
 ## Ejemplo ejecutable
 
+No necesitas desplegar una web ni consultar imágenes. Hay tres recetas Dart
+compilables y probadas: colección con búsqueda, formulario fullscreen y dashboard.
+Desde `example`, puedes ejecutar cualquiera en Windows:
+
+```sh
+flutter run -d windows -t lib/recipes/main.dart --dart-define=UI_RECIPE=collection
+flutter run -d windows -t lib/recipes/main.dart --dart-define=UI_RECIPE=form
+flutter run -d windows -t lib/recipes/main.dart --dart-define=UI_RECIPE=dashboard
+```
+
+Las recetas validan/buscan y emiten callbacks. No fingen guardados en un servidor.
+
 ```powershell
 git clone https://github.com/DiegPS/flutter_consistent_ui.git
 cd flutter_consistent_ui/example
@@ -238,6 +256,8 @@ foco/captura y mensajes encima de fullscreen. La cobertura se genera en
 `UiStatCard` presenta un valor ya formateado, icono, categoría y descripción,
 con acción opcional. No genera porcentajes ni series ficticias.
 Usa `compact: true` para una composición horizontal de altura natural en móvil.
+Usa `UiStatCard.adaptive` para decidirlo automáticamente según ancho de ventana,
+espacio local y escala de texto; el constructor explícito anterior no cambia.
 `UiSplitView` organiza dos paneles con altura natural; se apilan al reducir
 el ancho disponible o ampliar el texto, conservando su estado al redimensionar.
 
