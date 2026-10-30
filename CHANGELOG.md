@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Opt-in compact horizontal composition for UiStatCard on small viewports.
+
 ## 0.2.0
 
 - `UiStatCard`: vertical statistics with category, description and optional action.

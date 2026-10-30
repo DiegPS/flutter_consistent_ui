@@ -12,7 +12,7 @@ no incluye logos y no obliga a usar los colores de otro producto.
 ## Estado y ubicación
 
 - Paquete independiente: `C:/Users/dpahu/Documents/flutter_consistent_ui`.
-- API: `0.2.0`, distribuida por Git (`publish_to: none` evita publicar en pub.dev).
+- API: `0.2.1`, distribuida por Git (`publish_to: none` evita publicar en pub.dev).
 - Flutter mínimo **3.47.0**, Dart **3.13.0**. Se declara el SDK realmente probado;
   no se promete compatibilidad con versiones antiguas sin verificarlas.
 - Repositorio público: https://github.com/DiegPS/flutter_consistent_ui.
@@ -27,7 +27,7 @@ dependencies:
   flutter_consistent_ui:
     git:
       url: https://github.com/DiegPS/flutter_consistent_ui.git
-      ref: v0.2.0
+      ref: v0.2.1
 ```
 
 Ejecuta `flutter pub get`. El tag fija la versión para que una modificación de
@@ -237,6 +237,7 @@ foco/captura y mensajes encima de fullscreen. La cobertura se genera en
 
 `UiStatCard` presenta un valor ya formateado, icono, categoría y descripción,
 con acción opcional. No genera porcentajes ni series ficticias.
+Usa `compact: true` para una composición horizontal de altura natural en móvil.
 `UiSplitView` organiza dos paneles con altura natural; se apilan al reducir
 el ancho disponible o ampliar el texto, conservando su estado al redimensionar.
 

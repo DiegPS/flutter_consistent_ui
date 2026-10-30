@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'ui_metric_card.dart';
+
 /// A vertical dashboard statistic with a natural height and an optional action.
 /// Values are formatted by the consumer; this widget never invents a trend.
 class UiStatCard extends StatelessWidget {
@@ -11,6 +13,7 @@ class UiStatCard extends StatelessWidget {
     this.description,
     this.accent,
     this.onTap,
+    this.compact = false,
     super.key,
   });
 
@@ -20,8 +23,20 @@ class UiStatCard extends StatelessWidget {
   final Color? accent;
   final VoidCallback? onTap;
 
+  /// Uses the horizontal metric composition when vertical space is precious.
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
+    if (compact) {
+      return UiMetricCard(
+        label: label,
+        value: value,
+        icon: icon,
+        accent: accent,
+        onTap: onTap,
+      );
+    }
     final theme = Theme.of(context);
     final color = accent ?? theme.colorScheme.primary;
     return Card(
