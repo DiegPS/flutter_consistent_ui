@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- `UiStatCard`: vertical statistics with category, description and optional action.
+- `UiSplitView`: adaptive natural-height columns preserving children on resize.
+
 ## 0.1.0
 
 - Independent Flutter package extracted from a production application.

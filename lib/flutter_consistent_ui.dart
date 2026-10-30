@@ -20,3 +20,5 @@ export 'src/collections/ui_collection_page.dart';
 export 'src/dialogs/ui_fullscreen_dialog.dart';
 export 'src/notifications/ui_notice.dart';
 export 'src/navigation/ui_bottom_navigation.dart';
+export 'src/widgets/ui_stat_card.dart';
+export 'src/layout/ui_split_view.dart';
