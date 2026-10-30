@@ -1,0 +1,17 @@
+name: flutter_consistent_ui
+description: Consistent native Material controls, adaptive forms, collections and application surfaces for Flutter.
+version: 0.1.0
+publish_to: none
+repository: https://github.com/DiegPS/flutter_consistent_ui
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+  flutter: '>=3.47.0'
+dependencies:
+  flutter:
+    sdk: flutter
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  uses-material-design: true
