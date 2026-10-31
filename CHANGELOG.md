@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0
+
+- Add UiSurface / UiSurface.inverse to scope text, icons and native button
+  palettes coherently, including inherited explicit product button colors.
+- Preserve fonts, geometry and theme extensions; native primary/tonal pairs
+  remain distinct. Explicit descendant colors still belong to the consumer.
+- Add contrast regressions for light/dark parents, normal/inverse surfaces,
+  recovery buttons, icons, disabled buttons and primary/tonal actions.
+
 ## 0.3.0
 
 - Add UiStatCard.adaptive; keep the explicit constructor's behavior unchanged.

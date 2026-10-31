@@ -1,13 +1,13 @@
-# Verificación del paquete 0.3.0
+# Verificación del paquete 0.4.0
 
 Entorno utilizado: Windows, Flutter 3.47.2 y Dart 3.13.2.
 
 ## Resultado local
 
-- 75 pruebas de unidad/widgets del paquete aprobadas.
+- 79 pruebas de unidad/widgets del paquete aprobadas.
 - 5 recorridos del ejemplo/recetas aprobados (360/390/1280), incluyendo cambio
   de identidad, validación, captura, aviso global y snackbar del fullscreen.
-- Cobertura de líneas: **1,101/1,241 = 88.7 %**, sin exclusiones para inflar la cifra.
+- Cobertura de líneas: **1,147/1,287 = 89.1 %**, sin exclusiones para inflar la cifra.
 - `dart analyze --fatal-infos` y formato verificables desde la raíz.
 - Compilación Windows debug de la receta dashboard aprobada (22.6 s). Ejecutable en
   `example/build/windows/x64/runner/Debug/consistent_ui_example.exe`.
@@ -45,6 +45,9 @@ UiSplitView con navegación/acciones a 360/1200.
 - Alturas iguales con hijos LayoutBuilder, cambio de spacing/mínimo, RTL y taps.
 - Índice para IA comparado con todos los exports, símbolos públicos, métricas,
   rutas de recetas y dependencia runtime única.
+- UiSurface normal/inversa sobre temas claro/oscuro, con colores explícitos
+  heredados de botones: contraste real de texto/icono de recuperar, deshabilitado,
+  botones primarios y tonales, preservación de geometría y callbacks.
 - Recetas compiladas: buscar/sin resultados, callbacks de abrir/crear, validación
   de formulario y snackbar visible sobre fullscreen. No simulan guardados HTTP.
 - Componentes públicos de presentación, navegación, gráficos y estados vacíos.

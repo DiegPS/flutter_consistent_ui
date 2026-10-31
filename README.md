@@ -12,7 +12,7 @@ no incluye logos y no obliga a usar los colores de otro producto.
 ## Estado y ubicación
 
 - Paquete independiente: `C:/Users/dpahu/Documents/flutter_consistent_ui`.
-- API: `0.3.0`, distribuida por Git (`publish_to: none` evita publicar en pub.dev).
+- API: `0.4.0`, distribuida por Git (`publish_to: none` evita publicar en pub.dev).
 - Flutter mínimo **3.47.0**, Dart **3.13.0**. Se declara el SDK realmente probado;
   no se promete compatibilidad con versiones antiguas sin verificarlas.
 - Repositorio público: https://github.com/DiegPS/flutter_consistent_ui.
@@ -27,7 +27,7 @@ dependencies:
   flutter_consistent_ui:
     git:
       url: https://github.com/DiegPS/flutter_consistent_ui.git
-      ref: v0.3.0
+      ref: v0.4.0
 ```
 
 Ejecuta `flutter pub get`. El tag fija la versión para que una modificación de
@@ -250,6 +250,16 @@ foco/captura y mensajes encima de fullscreen. La cobertura se genera en
 `coverage/lcov.info`; no se ocultan archivos con directivas para inflar el porcentaje.
 
 ## Distribución y mantenimiento
+
+### Superficies contrastantes
+
+Usa `UiSurface.inverse(child: Builder(builder: (context) => ...))` para un panel
+contrastante, y `UiSurface` para el normal. Lee `Theme.of(context)` **dentro** del
+Builder: allí texto, iconos y botones reciben la paleta local, aunque el tema
+padre tuviera colores de botón explícitos. Se conservan fuentes y geometría.
+Los botones primarios y tonales mantienen sus pares Material diferentes.
+No fuerza contraste sobre colores escritos directamente en hijos ni corrige
+un ColorScheme del consumidor cuyos pares ya sean ilegibles.
 
 ### Composiciones de dashboard
 

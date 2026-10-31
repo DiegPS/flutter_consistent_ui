@@ -26,6 +26,7 @@
   },
   "sources": {
     "src/theme/ui_theme.dart": ["UiThemeData", "UiTheme"],
+    "src/theme/ui_surface.dart": ["UiSurface"],
     "src/theme/ui_control_metrics.dart": ["UiControlMetrics", "UiControlScope"],
     "src/theme/ui_semantic_colors.dart": ["UiTone", "UiSemanticColors"],
     "src/theme/ui_typography.dart": ["UiTypography"],
@@ -53,7 +54,8 @@
     "list": "UiCollectionPage + UiSearchField + UiCollectionList.builder. Keep data fetching/filtering in consumer.",
     "statistic": "UiStatCard.adaptive for auto; UiStatCard(compact: bool) for explicit; UiMetricCard for horizontal/trend use.",
     "modal_notice": "showUiFullscreenDialog builder context for SnackBar; UiNoticeHost via MaterialApp.builder for above-route notices.",
-    "styling": "Consumer ColorScheme/font/UiSemanticColors; UiThemeData controls geometry; do not override dimensions per action."
+    "styling": "Consumer ColorScheme/font/UiSemanticColors; UiThemeData controls geometry; do not override dimensions per action.",
+    "inverse_surface": "UiSurface.inverse + inner Builder for local theme reads. Rebinds explicit outer button palette; preserve native primary/tonal pairs. Do not paste partial Theme.copyWith overrides in consumers. Explicit descendant colors remain caller-owned."
   },
   "verification": ["dart analyze --fatal-infos", "flutter test --coverage", "cd example && flutter test"],
   "limitations": ["Material-based, not native Fluent/Cupertino", "No business or API end-to-end coverage", "Physical device support must be checked by consumers", "UiCountUpText accepts decimal dot/comma grouping; preformat or avoid animation for other notations"]

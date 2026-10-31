@@ -34,10 +34,25 @@ class DashboardRecipe extends StatelessWidget {
               ),
             ),
           ),
-          secondary: const Card(
-            child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Text('Panel secundario'),
+          secondary: UiSurface.inverse(
+            padding: const EdgeInsets.all(24),
+            child: Builder(
+              builder: (context) => Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Panel contrastante',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 12),
+                  UiControls.secondaryIcon(
+                    onPressed: onOpen,
+                    icon: const Icon(Icons.restore_outlined),
+                    label: const Text('Recuperar ejemplo'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
