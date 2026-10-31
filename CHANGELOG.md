@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1
+
+- Recalculate metric row heights when descendant content changes asynchronously,
+  including growth and shrinkage without rebuilding the grid. Preserve equal
+  surfaces, LayoutBuilder support and natural accessible content height.
+
 ## 0.4.0
 
 - Add UiSurface / UiSurface.inverse to scope text, icons and native button

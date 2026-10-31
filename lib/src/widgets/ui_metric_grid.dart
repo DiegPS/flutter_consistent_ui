@@ -176,7 +176,13 @@ class _RenderEqualHeightRow extends RenderBox
     var index = 0;
     while (child != null) {
       child.layout(
-        BoxConstraints.tightFor(width: itemWidth, height: height),
+        // Keep the vertical maximum loose: a tight height creates a relayout
+        // boundary that hides later descendant size changes from this row.
+        BoxConstraints(
+          minWidth: itemWidth,
+          maxWidth: itemWidth,
+          minHeight: height,
+        ),
         parentUsesSize: true,
       );
       final data = child.parentData! as _GridData;
