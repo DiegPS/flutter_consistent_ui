@@ -17,15 +17,20 @@
     "Native callbacks, keys, focus and controller ownership are preserved; consumers own business behavior.",
     "UiStatCard.adaptive chooses horizontal on compact windows or locally narrow/scaled panels; explicit constructor remains stable.",
     "UiControls.select expands by default and menu itemHeight is natural; explicit isExpanded:false is a caller opt-out.",
-    "No logos, fonts, API, auth, persistence or business data are supplied by the runtime package."
+    "No logos, fonts, API, auth, persistence or business data are supplied by the runtime package.",
+    "Appearance precedence: per-widget overrides > explicit base theme > policy defaults. Apply policies to the original base theme, not to a previously applied result.",
+    "Underline and borderless floating labels reserve natural internal space; never clip them to force the outline height."
   ],
   "recipes": {
     "collection": "example/lib/recipes/collection_recipe.dart",
     "fullscreen_form": "example/lib/recipes/form_recipe.dart",
-    "dashboard": "example/lib/recipes/dashboard_recipe.dart"
+    "dashboard": "example/lib/recipes/dashboard_recipe.dart",
+    "appearance": "example/lib/appearance.dart"
   },
   "sources": {
     "src/theme/ui_theme.dart": ["UiThemeData", "UiTheme"],
+    "src/theme/ui_border_theme.dart": ["UiBorderKind", "UiBorderTheme"],
+    "src/theme/ui_surface_style.dart": ["UiSurfaceStyle"],
     "src/theme/ui_surface.dart": ["UiSurface"],
     "src/theme/ui_control_metrics.dart": ["UiControlMetrics", "UiControlScope"],
     "src/theme/ui_semantic_colors.dart": ["UiTone", "UiSemanticColors"],
@@ -54,7 +59,7 @@
     "list": "UiCollectionPage + UiSearchField + UiCollectionList.builder. Keep data fetching/filtering in consumer.",
     "statistic": "UiStatCard.adaptive for auto; UiStatCard(compact: bool) for explicit; UiMetricCard for horizontal/trend use.",
     "modal_notice": "showUiFullscreenDialog builder context for SnackBar; UiNoticeHost via MaterialApp.builder for above-route notices.",
-    "styling": "Consumer ColorScheme/font/UiSemanticColors; UiThemeData controls geometry; do not override dimensions per action.",
+    "styling": "Consumer ColorScheme/font/UiSemanticColors; UiThemeData controls geometry; UiBorderTheme fills missing field borders; UiSurfaceStyle configures panels. Explicit native overrides win. Do not override dimensions per action.",
     "inverse_surface": "UiSurface.inverse + inner Builder for local theme reads. Rebinds explicit outer button palette; preserve native primary/tonal pairs. Do not paste partial Theme.copyWith overrides in consumers. Explicit descendant colors remain caller-owned."
   },
   "verification": ["dart analyze --fatal-infos", "flutter test --coverage", "cd example && flutter test"],

@@ -83,8 +83,8 @@ class UiStatCard extends StatelessWidget {
     final theme = Theme.of(context);
     final color = accent ?? theme.colorScheme.primary;
     return Card(
+      clipBehavior: Theme.of(context).cardTheme.clipBehavior ?? Clip.antiAlias,
       margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(

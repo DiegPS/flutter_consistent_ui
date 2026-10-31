@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'ui_theme.dart';
+import 'ui_surface_style.dart';
 
 /// A normal or inverse Material panel with coherent inherited foregrounds.
 ///
@@ -12,16 +13,19 @@ class UiSurface extends StatelessWidget {
   const UiSurface({
     required this.child,
     this.padding = EdgeInsets.zero,
+    this.style,
     super.key,
   }) : inverse = false;
   const UiSurface.inverse({
     required this.child,
     this.padding = EdgeInsets.zero,
+    this.style,
     super.key,
   }) : inverse = true;
 
   final Widget child;
   final EdgeInsetsGeometry padding;
+  final UiSurfaceStyle? style;
 
   /// Whether the panel uses the outer scheme's inverse surface pair.
   final bool inverse;
@@ -29,6 +33,7 @@ class UiSurface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final base = Theme.of(context);
+    final appearance = UiSurfaceStyle.of(context).merge(style);
     final colors = base.colorScheme;
     final background = inverse
         ? colors.inverseSurface
@@ -80,11 +85,14 @@ class UiSurface extends StatelessWidget {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: neutral(base.outlinedButtonTheme.style).copyWith(
           side: WidgetStateProperty.resolveWith(
-            (states) => BorderSide(
-              color: foreground.withValues(
-                alpha: states.contains(WidgetState.disabled) ? .25 : .6,
-              ),
-            ),
+            (states) =>
+                (base.outlinedButtonTheme.style?.side?.resolve(states) ??
+                        const BorderSide())
+                    .copyWith(
+                      color: foreground.withValues(
+                        alpha: states.contains(WidgetState.disabled) ? .25 : .6,
+                      ),
+                    ),
           ),
         ),
       ),
@@ -103,12 +111,18 @@ class UiSurface extends StatelessWidget {
           data: IconThemeData(color: foreground),
           child: Material(
             color: background,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                UiThemeData.of(context).panelRadius,
-              ),
-            ),
+            elevation: appearance.elevation ?? 0,
+            shadowColor: appearance.shadowColor,
+            surfaceTintColor: Colors.transparent,
+            clipBehavior: appearance.clipBehavior ?? Clip.antiAlias,
+            shape:
+                appearance.shape ??
+                RoundedRectangleBorder(
+                  side: appearance.border ?? BorderSide.none,
+                  borderRadius: BorderRadius.circular(
+                    UiThemeData.of(context).panelRadius,
+                  ),
+                ),
             child: Padding(padding: padding, child: child),
           ),
         ),

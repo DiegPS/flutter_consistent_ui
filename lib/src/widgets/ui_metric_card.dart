@@ -42,7 +42,7 @@ class UiMetricCard extends StatelessWidget {
         sparklineData != null && sparklineData!.isNotEmpty && !layout.isCompact;
 
     return Card(
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: Theme.of(context).cardTheme.clipBehavior ?? Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(

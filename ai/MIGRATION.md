@@ -31,8 +31,26 @@
   locale/formatting, routes, authorization, API/errors, persistence and validation.
 - UiThemeData: control border height, scale-aware line/font metrics, padding,
   radii, field spacing and minimum grid field width.
+- UiBorderTheme: missing outline/underline/none field borders and state widths.
+  Precedence is per-widget > explicit base theme > policy. Generic custom input
+  borders also supply the shape of unspecified state borders. ColorScheme owns
+  colors. Rebuild from the original base theme when changing a policy.
+- UiSurfaceStyle: panel border OR full shape, elevation, shadow and clip.
+  Local style merges over the extension; explicit native CardThemeData wins.
+  BorderSide.none and elevation 0 clear inherited values. Shape and border may
+  not be supplied together. Inverse surfaces rebind colors but preserve widths.
 - Individual controls: enabled/busy state, native controllers/formatters,
   validator/callbacks and documented presentation options. Local action styles
   may change color/shape, not override the central geometry policy.
 - Recipes: application compositions, not new backend behavior. Copy/adapt a
   recipe's consumer shell; depend on the package for the actual UI components.
+
+## 0.5 upgrade checks
+
+UiTheme.apply no longer overwrites explicit native visual styles. Remove old
+consumer overrides only if the policy should replace them. Do not add a runtime
+legacy-mode switch. Pinned 0.4 consumers are not upgraded automatically.
+Test unlabeled controls separately from floating labels: underline/none labels
+reserve additional internal space natively, especially at large text scales.
+Do not constrain/crop their container to imitate outline geometry.
+Run `example/lib/appearance.dart` for the executable customization recipe.

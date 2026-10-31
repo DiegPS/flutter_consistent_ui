@@ -1,6 +1,8 @@
 library;
 
 export 'src/theme/ui_theme.dart';
+export 'src/theme/ui_border_theme.dart';
+export 'src/theme/ui_surface_style.dart';
 export 'src/theme/ui_surface.dart';
 export 'src/theme/ui_control_metrics.dart';
 export 'src/theme/ui_semantic_colors.dart';

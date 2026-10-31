@@ -12,7 +12,8 @@ no incluye logos y no obliga a usar los colores de otro producto.
 ## Estado y ubicación
 
 - Paquete independiente: `C:/Users/dpahu/Documents/flutter_consistent_ui`.
-- API: `0.4.0`, distribuida por Git (`publish_to: none` evita publicar en pub.dev).
+- API: `0.5.0`.
+  Distribución por Git (`publish_to: none` evita publicar en pub.dev).
 - Flutter mínimo **3.47.0**, Dart **3.13.0**. Se declara el SDK realmente probado;
   no se promete compatibilidad con versiones antiguas sin verificarlas.
 - Repositorio público: https://github.com/DiegPS/flutter_consistent_ui.
@@ -27,11 +28,16 @@ dependencies:
   flutter_consistent_ui:
     git:
       url: https://github.com/DiegPS/flutter_consistent_ui.git
-      ref: v0.4.0
+      ref: v0.5.0
 ```
 
 Ejecuta `flutter pub get`. El tag fija la versión para que una modificación de
 `main` no cambie inesperadamente los componentes de tus proyectos.
+
+Validación local de 0.5.0: análisis sin incidencias, 120 pruebas del paquete
+con LCOV, seis del ejemplo, referencias visuales originales conservadas y
+arranque/hot reload del ejemplo Windows sin errores de Flutter. Son pruebas
+de componentes y del ejemplo, no una certificación automática de consumidores.
 
 ## Desarrollo local
 
@@ -52,6 +58,55 @@ los archivos de la biblioteca a cada proyecto**.
 Para equipos/CI usa la dependencia Git anterior, no una ruta de tu PC.
 
 ## Inicio mínimo
+
+### Apariencia sin sobrescrituras — 0.5.0
+
+Prioridad: **propiedad del widget → estilo explícito del tema del producto →
+política de la biblioteca → valor nativo**. `UiTheme.apply` completa lo que
+falta; ya no sustituye un borde subrayado o una elevación definidos por ti.
+Construye el tema desde tu `ThemeData` original, no reaplicando sobre el
+resultado anterior. Los colores y fuentes siguen siendo del producto.
+
+```dart
+final theme = UiTheme.apply(
+  ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
+  borders: const UiBorderTheme(
+    kind: UiBorderKind.underline, // outline / underline / none
+    width: 1,
+    focusedWidth: 2,
+    errorWidth: 1,
+    focusedErrorWidth: 2,
+  ),
+  surfaces: const UiSurfaceStyle(
+    border: BorderSide(color: Color(0xFFDAD7E4)),
+    elevation: 1,
+  ),
+);
+
+// Hereda la política. Una excepción local no requiere copiar el widget.
+const UiSurface(
+  style: UiSurfaceStyle(border: BorderSide.none, elevation: 0),
+  padding: EdgeInsets.all(20),
+  child: Text('Contenido del producto'),
+);
+```
+
+`shape` puede contener cualquier `ShapeBorder` nativo, incluidos sus lados.
+No se combina con `border`: una forma local sustituye un borde heredado y
+viceversa. `null` hereda; `BorderSide.none` y elevación `0` eliminan los efectos.
+`UiSurface.inverse` conserva pares de color legibles y el mismo estilo.
+No hay alturas exteriores fijas ni se ocultan etiquetas: las etiquetas flotantes
+subrayadas/sin borde ocupan espacio interno adicional por diseño de Flutter.
+Las ayudas y errores siempre conservan su altura natural.
+
+Ejemplo interactivo local y previews, sin hosting:
+
+```sh
+cd example
+flutter run -d windows -t lib/appearance.dart
+```
+
+### Geometría y marca
 
 Para agentes/IA: empieza por [ai/UI_CONTRACT.json](ai/UI_CONTRACT.json).
 Indexa todas las declaraciones públicas, restricciones y recetas; un test

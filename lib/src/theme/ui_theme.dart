@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'ui_border_theme.dart';
+import 'ui_surface_style.dart';
+
 /// Geometry policy. Colors and fonts remain owned by the consuming application.
 @immutable
 class UiThemeData extends ThemeExtension<UiThemeData> {
@@ -95,117 +98,191 @@ class UiThemeData extends ThemeExtension<UiThemeData> {
   }
 }
 
-/// Installs shapes and geometry without replacing a product's color scheme/fonts.
+/// Installs geometry and missing visual defaults, preserving explicit styles.
+///
+/// Per-widget values win over the application theme; explicit application-theme
+/// values win over these policies. To use a policy globally, omit conflicting
+/// overrides from the base theme. Colors and fonts remain product-owned.
 abstract final class UiTheme {
   static ThemeData apply(
     ThemeData base, {
     UiThemeData geometry = const UiThemeData(),
+    UiBorderTheme? borders,
+    UiSurfaceStyle? surfaces,
   }) {
     final colors = base.colorScheme;
+    final borderPolicy =
+        borders ?? base.extension<UiBorderTheme>() ?? const UiBorderTheme();
+    final surfacePolicy =
+        surfaces ?? base.extension<UiSurfaceStyle>() ?? const UiSurfaceStyle();
+    final input = base.inputDecorationTheme;
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(geometry.controlRadius),
     );
-    OutlineInputBorder border(Color color, [double width = 1]) =>
-        OutlineInputBorder(
-          borderRadius: BorderRadius.circular(geometry.controlRadius),
-          borderSide: BorderSide(color: color, width: width),
+    final inputShape =
+        input.border ??
+        borderPolicy.inputBorder(
+          geometry.controlRadius,
+          borderPolicy.side(colors, {}),
+        );
+    InputBorder border(Set<WidgetState> states) =>
+        inputShape.copyWith(borderSide: borderPolicy.side(colors, states));
+    final panelShape =
+        surfacePolicy.shape ??
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(geometry.panelRadius),
+          side:
+              surfacePolicy.border ?? BorderSide(color: colors.outlineVariant),
         );
     return base.copyWith(
       extensions: [
-        ...base.extensions.values.where((e) => e is! UiThemeData),
+        ...base.extensions.values.where(
+          (e) =>
+              e is! UiThemeData && e is! UiBorderTheme && e is! UiSurfaceStyle,
+        ),
         geometry,
+        borderPolicy,
+        surfacePolicy,
       ],
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
-        border: border(colors.outline),
-        enabledBorder: border(colors.outline),
-        focusedBorder: border(colors.primary, 1.5),
-        errorBorder: border(colors.error),
-        focusedErrorBorder: border(colors.error, 1.5),
+        border: inputShape,
+        enabledBorder: input.enabledBorder ?? inputShape,
+        disabledBorder: input.disabledBorder ?? border({WidgetState.disabled}),
+        focusedBorder: input.focusedBorder ?? border({WidgetState.focused}),
+        errorBorder: input.errorBorder ?? border({WidgetState.error}),
+        focusedErrorBorder:
+            input.focusedErrorBorder ??
+            border({WidgetState.error, WidgetState.focused}),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: (base.filledButtonTheme.style ?? const ButtonStyle()).copyWith(
-          shape: WidgetStatePropertyAll(shape),
+          shape:
+              base.filledButtonTheme.style?.shape ??
+              WidgetStatePropertyAll(shape),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: (base.elevatedButtonTheme.style ?? const ButtonStyle()).copyWith(
+          shape:
+              base.elevatedButtonTheme.style?.shape ??
+              WidgetStatePropertyAll(shape),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: (base.outlinedButtonTheme.style ?? const ButtonStyle()).copyWith(
-          shape: WidgetStatePropertyAll(shape),
+          shape:
+              base.outlinedButtonTheme.style?.shape ??
+              WidgetStatePropertyAll(shape),
+          side:
+              base.outlinedButtonTheme.style?.side ??
+              WidgetStateProperty.resolveWith(
+                (s) => borderPolicy.side(colors, s),
+              ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: (base.textButtonTheme.style ?? const ButtonStyle()).copyWith(
-          shape: WidgetStatePropertyAll(shape),
+          shape:
+              base.textButtonTheme.style?.shape ??
+              WidgetStatePropertyAll(shape),
         ),
       ),
       cardTheme: base.cardTheme.copyWith(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(geometry.panelRadius),
-          side: BorderSide(color: colors.outlineVariant),
-        ),
+        elevation: base.cardTheme.elevation ?? surfacePolicy.elevation ?? 0,
+        shadowColor: base.cardTheme.shadowColor ?? surfacePolicy.shadowColor,
+        clipBehavior: base.cardTheme.clipBehavior ?? surfacePolicy.clipBehavior,
+        margin: base.cardTheme.margin ?? EdgeInsets.zero,
+        shape: base.cardTheme.shape ?? panelShape,
       ),
       appBarTheme: base.appBarTheme.copyWith(
-        backgroundColor: colors.surfaceContainerLowest,
-        foregroundColor: colors.onSurface,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        scrolledUnderElevation: 0,
+        backgroundColor:
+            base.appBarTheme.backgroundColor ?? colors.surfaceContainerLowest,
+        foregroundColor: base.appBarTheme.foregroundColor ?? colors.onSurface,
+        surfaceTintColor:
+            base.appBarTheme.surfaceTintColor ?? Colors.transparent,
+        elevation: base.appBarTheme.elevation ?? 0,
+        scrolledUnderElevation: base.appBarTheme.scrolledUnderElevation ?? 0,
       ),
       dialogTheme: base.dialogTheme.copyWith(
-        backgroundColor: colors.surfaceContainerLowest,
-        surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(geometry.panelRadius),
-        ),
+        backgroundColor:
+            base.dialogTheme.backgroundColor ?? colors.surfaceContainerLowest,
+        surfaceTintColor:
+            base.dialogTheme.surfaceTintColor ?? Colors.transparent,
+        shape:
+            base.dialogTheme.shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(geometry.panelRadius),
+            ),
       ),
       bottomSheetTheme: base.bottomSheetTheme.copyWith(
-        backgroundColor: colors.surfaceContainerLowest,
-        surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(geometry.panelRadius),
-          ),
-        ),
+        backgroundColor:
+            base.bottomSheetTheme.backgroundColor ??
+            colors.surfaceContainerLowest,
+        surfaceTintColor:
+            base.bottomSheetTheme.surfaceTintColor ?? Colors.transparent,
+        shape:
+            base.bottomSheetTheme.shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(geometry.panelRadius),
+              ),
+            ),
       ),
       popupMenuTheme: base.popupMenuTheme.copyWith(
-        color: colors.surfaceContainerLowest,
-        surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(geometry.controlRadius),
-        ),
+        color: base.popupMenuTheme.color ?? colors.surfaceContainerLowest,
+        surfaceTintColor:
+            base.popupMenuTheme.surfaceTintColor ?? Colors.transparent,
+        shape:
+            base.popupMenuTheme.shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(geometry.controlRadius),
+            ),
       ),
       tooltipTheme: base.tooltipTheme.copyWith(
-        decoration: BoxDecoration(
-          color: colors.inverseSurface,
-          borderRadius: BorderRadius.circular(geometry.controlRadius),
-        ),
-        textStyle: base.textTheme.bodySmall?.copyWith(
-          color: colors.onInverseSurface,
-        ),
+        decoration:
+            base.tooltipTheme.decoration ??
+            BoxDecoration(
+              color: colors.inverseSurface,
+              borderRadius: BorderRadius.circular(geometry.controlRadius),
+            ),
+        textStyle:
+            base.tooltipTheme.textStyle ??
+            base.textTheme.bodySmall?.copyWith(color: colors.onInverseSurface),
       ),
       snackBarTheme: base.snackBarTheme.copyWith(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: colors.inverseSurface,
-        contentTextStyle: base.textTheme.bodyMedium?.copyWith(
-          color: colors.onInverseSurface,
-        ),
-        actionTextColor: colors.inversePrimary,
-        shape: shape,
+        behavior: base.snackBarTheme.behavior ?? SnackBarBehavior.floating,
+        backgroundColor:
+            base.snackBarTheme.backgroundColor ?? colors.inverseSurface,
+        contentTextStyle:
+            base.snackBarTheme.contentTextStyle ??
+            base.textTheme.bodyMedium?.copyWith(color: colors.onInverseSurface),
+        actionTextColor:
+            base.snackBarTheme.actionTextColor ?? colors.inversePrimary,
+        shape: base.snackBarTheme.shape ?? shape,
       ),
       navigationRailTheme: base.navigationRailTheme.copyWith(
-        backgroundColor: colors.surfaceContainerLowest,
-        indicatorColor: colors.primaryContainer,
-        selectedIconTheme: IconThemeData(color: colors.primary),
-        unselectedIconTheme: IconThemeData(color: colors.onSurfaceVariant),
+        backgroundColor:
+            base.navigationRailTheme.backgroundColor ??
+            colors.surfaceContainerLowest,
+        indicatorColor:
+            base.navigationRailTheme.indicatorColor ?? colors.primaryContainer,
+        selectedIconTheme:
+            base.navigationRailTheme.selectedIconTheme ??
+            IconThemeData(color: colors.primary),
+        unselectedIconTheme:
+            base.navigationRailTheme.unselectedIconTheme ??
+            IconThemeData(color: colors.onSurfaceVariant),
       ),
       tabBarTheme: base.tabBarTheme.copyWith(
-        labelColor: colors.primary,
-        unselectedLabelColor: colors.onSurfaceVariant,
-        indicatorColor: colors.primary,
-        dividerColor: colors.outlineVariant,
+        labelColor: base.tabBarTheme.labelColor ?? colors.primary,
+        unselectedLabelColor:
+            base.tabBarTheme.unselectedLabelColor ?? colors.onSurfaceVariant,
+        indicatorColor: base.tabBarTheme.indicatorColor ?? colors.primary,
+        dividerColor: base.tabBarTheme.dividerColor ?? colors.outlineVariant,
       ),
-      dividerTheme: base.dividerTheme.copyWith(color: colors.outlineVariant),
+      dividerTheme: base.dividerTheme.copyWith(
+        color: base.dividerTheme.color ?? colors.outlineVariant,
+      ),
     );
   }
 }

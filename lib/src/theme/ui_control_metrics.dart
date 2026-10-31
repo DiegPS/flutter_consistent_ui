@@ -50,7 +50,13 @@ abstract final class UiControlMetrics {
       isDense: true,
       visualDensity: VisualDensity.standard,
       hintStyle: textStyle(context)
-          .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)
+          .merge(Theme.of(context).inputDecorationTheme.hintStyle)
+          .merge(value.hintStyle)
+          .copyWith(
+            fontSize: config.fontSize,
+            height: config.lineHeight / config.fontSize,
+          ),
       helperMaxLines: value.helperMaxLines ?? 4,
       errorMaxLines: value.errorMaxLines ?? 4,
       contentPadding: EdgeInsets.symmetric(
@@ -96,6 +102,9 @@ class UiControlScope extends StatelessWidget {
       data: theme.copyWith(
         filledButtonTheme: FilledButtonThemeData(
           style: geometry.merge(theme.filledButtonTheme.style),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: geometry.merge(theme.elevatedButtonTheme.style),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: geometry.merge(theme.outlinedButtonTheme.style),

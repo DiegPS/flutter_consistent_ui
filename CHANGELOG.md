@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.5.0
+
+- Change appearance precedence: per-widget values and explicit native theme
+  values now win over UiTheme.apply defaults. Existing input borders, shapes,
+  card elevation/margin, app bars, dialogs, tooltips and navigation styles are
+  no longer silently replaced. Apply policies to the original base ThemeData.
+- Add UiBorderTheme / UiBorderKind for outline, underline and borderless field
+  defaults, normal/focus/error/focused-error widths and outlined-button states.
+- Add UiSurfaceStyle for shared/local borders, shapes, elevation, shadow and
+  clipping. Shape and border are mutually exclusive; BorderSide.none and zero
+  elevation explicitly clear inherited values. Color pairs remain scheme-owned.
+- Preserve outlined-button widths inside normal/inverse UiSurface panels and
+  explicit hint styling without overriding shared font metrics.
+- Include native ElevatedButton geometry in UiControlScope and respect native
+  Card clipping policies in metric/statistic widgets.
+- Add interactive appearance example/previews and regressions for state
+  precedence, painted geometry, 300% text, fractional DPR and retained drafts.
+- Migration: consumers that previously relied on UiTheme.apply overwriting
+  their styles should remove obsolete base-theme overrides when upgrading.
+  Underlined/borderless floating labels retain Flutter's natural internal room;
+  they are not clipped to imitate an outlined field. No automatic consumer upgrade.
+
 ## 0.4.1
 
 - Recalculate metric row heights when descendant content changes asynchronously,

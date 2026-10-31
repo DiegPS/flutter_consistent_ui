@@ -4,6 +4,16 @@ Para consultar patrones concretos sin un catálogo web, usa `lib/recipes/main.da
 con `--dart-define=UI_RECIPE=collection`, `form` o `dashboard`. Los tres patrones
 son código compilable, con callbacks y pruebas; no requieren imágenes ni servidor.
 
+Para probar bordes, superficies y sus estados sin modificar otra aplicación:
+
+```sh
+flutter run -d windows -t lib/appearance.dart
+```
+
+Ese ejemplo alterna contorno/subrayado/sin borde, tema claro/oscuro, borde y
+elevación del panel. Conserva la captura, muestra validación y tiene previews
+locales y pruebas. No usa hosting ni una API.
+
 Este proyecto consume `flutter_consistent_ui` mediante `path: ../`, igual que
 lo haría cualquier otra aplicación. No necesita OnAuto, un servidor ni sesión.
 
