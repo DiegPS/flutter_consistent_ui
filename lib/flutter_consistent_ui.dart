@@ -15,6 +15,7 @@ export 'src/forms/ui_form_layout.dart';
 export 'src/collections/ui_collection_list.dart';
 export 'src/collections/ui_collection_viewport.dart';
 export 'src/widgets/ui_empty_state.dart';
+export 'src/widgets/ui_disclosure.dart';
 export 'src/widgets/ui_metric_card.dart';
 export 'src/widgets/ui_metric_grid.dart';
 export 'src/widgets/ui_sparkline.dart';

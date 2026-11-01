@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0
+
+- Add `UiControls.searchableSelect` with native filtering, focus/controller
+  ownership, shared field metrics and themed popup surfaces.
+- Add `UiDisclosure`: a naturally sized, keyboard-accessible expansion panel
+  with consistent surfaces and shapes, preserving explicit native theme values.
+- Align ordinary select popup surface and radius with the control theme.
+
 ## 0.5.0
 
 - Change appearance precedence: per-widget values and explicit native theme
@@ -66,3 +74,4 @@
 - Adaptive forms, collection cards, metrics, navigation and segmented controls.
 - Theme/semantic palette, fullscreen dialogs, local messages and global notices.
 - Standalone example and regression tests; no application or networking dependency.
+

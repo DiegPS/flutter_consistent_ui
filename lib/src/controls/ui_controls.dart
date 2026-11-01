@@ -154,6 +154,10 @@ abstract final class UiControls {
       isExpanded: isExpanded,
       isDense: true,
       itemHeight: null,
+      dropdownColor: Theme.of(context).colorScheme.surface,
+      borderRadius: BorderRadius.circular(
+        UiThemeData.of(context).controlRadius,
+      ),
       style: _text(context, style),
       decoration: UiControlMetrics.decoration(
         context,
@@ -162,6 +166,79 @@ abstract final class UiControls {
       ),
       validator: validator,
     ),
+  );
+
+  static Widget searchableSelect<T>({
+    Key? key,
+    required List<DropdownMenuEntry<T>> entries,
+    required ValueChanged<T?>? onSelected,
+    T? initialSelection,
+    TextEditingController? controller,
+    FocusNode? focusNode,
+    Widget? label,
+    String? hintText,
+    String? helperText,
+    String? errorText,
+    bool enabled = true,
+    double menuHeight = 280,
+    FilterCallback<T>? filterCallback,
+    MenuStyle? menuStyle,
+  }) => Builder(
+    key: key == null ? null : ValueKey<Key>(key),
+    builder: (context) {
+      final theme = Theme.of(context);
+      final field = UiControlMetrics.decoration(
+        context,
+        const InputDecoration(),
+      );
+      final native =
+          theme.dropdownMenuTheme.inputDecorationTheme ??
+          theme.inputDecorationTheme;
+      return DropdownMenu<T>(
+        key: key,
+        controller: controller,
+        focusNode: focusNode,
+        initialSelection: initialSelection,
+        enabled: enabled,
+        label: label,
+        hintText: hintText,
+        helperText: helperText,
+        errorText: errorText,
+        textStyle: _text(context, null),
+        expandedInsets: EdgeInsets.zero,
+        enableFilter: true,
+        requestFocusOnTap: true,
+        menuHeight: menuHeight,
+        filterCallback: filterCallback,
+        dropdownMenuEntries: entries,
+        onSelected: onSelected,
+        menuStyle:
+            menuStyle ??
+            theme.dropdownMenuTheme.menuStyle ??
+            MenuStyle(
+              backgroundColor: WidgetStatePropertyAll(
+                theme.colorScheme.surface,
+              ),
+              surfaceTintColor: const WidgetStatePropertyAll(
+                Colors.transparent,
+              ),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    UiThemeData.of(context).controlRadius,
+                  ),
+                  side: BorderSide(color: theme.colorScheme.outlineVariant),
+                ),
+              ),
+            ),
+        inputDecorationTheme: native.copyWith(
+          isDense: field.isDense,
+          contentPadding: field.contentPadding,
+          prefixIconConstraints: field.prefixIconConstraints,
+          suffixIconConstraints: field.suffixIconConstraints,
+        ),
+      );
+    },
   );
 
   static Widget primary({

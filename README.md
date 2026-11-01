@@ -12,7 +12,7 @@ no incluye logos y no obliga a usar los colores de otro producto.
 ## Estado y ubicación
 
 - Paquete independiente: `C:/Users/dpahu/Documents/flutter_consistent_ui`.
-- API: `0.5.0`.
+- API: `0.6.0`.
   Distribución por Git (`publish_to: none` evita publicar en pub.dev).
 - Flutter mínimo **3.47.0**, Dart **3.13.0**. Se declara el SDK realmente probado;
   no se promete compatibilidad con versiones antiguas sin verificarlas.
@@ -340,3 +340,18 @@ en las dependencias de producción de OnAuto.
 El código fuente se hace público sin añadir en esta versión una licencia de
 redistribución para terceros. La fuente Inter del ejemplo conserva su propia
 licencia OFL en `example/assets/fonts/LICENSE.txt`.
+### Searchable selections and disclosure panels
+
+Use `UiControls.select` for a short choice list and
+`UiControls.searchableSelect` for a searchable list of `DropdownMenuEntry<T>`.
+Both inherit field borders, font and geometry; helper/error content retains
+natural height. The searchable control forwards caller controllers, focus,
+initial selection, filtering, callbacks and enabled state. Explicit native
+`DropdownMenuThemeData` input appearance is preserved.
+
+Use `UiDisclosure(title: ..., children: [...])` for collapsible secondary
+settings, not as a substitute for a select. It preserves child state by default,
+supports native keyboard expansion and inherits explicit expansion-tile theme
+overrides. Its resting surface is not a permanent hover/selection rectangle.
+See `example/lib/disclosure_preview.dart` for an interactive widget preview.
+

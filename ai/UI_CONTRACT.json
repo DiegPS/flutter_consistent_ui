@@ -45,6 +45,7 @@
     "src/collections/ui_collection_viewport.dart": ["UiPaginationFooter", "UiCollectionViewport"],
     "src/collections/ui_collection_page.dart": ["UiSearchField", "UiCollectionToolbar", "UiCollectionPage", "UiPagination"],
     "src/widgets/ui_empty_state.dart": ["UiEmptyState"],
+    "src/widgets/ui_disclosure.dart": ["UiDisclosure"],
     "src/widgets/ui_metric_card.dart": ["UiMetricCard"],
     "src/widgets/ui_metric_grid.dart": ["UiMetricGrid"],
     "src/widgets/ui_sparkline.dart": ["UiSparkline"],
